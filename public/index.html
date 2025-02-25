@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO APP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <h1>MANAJEMEN TUGAS</h1>
+
+        <h2>REGISTER</h2>
+        <form action="http://localhost:3000/api/auth/register" method="POST">
+            <input type="text" name="username" placeholder="Masukkan Username" required>
+            <input type="password" name="password" placeholder="Masukkan Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <h2>LOG IN</h2>
+        <form action="http://localhost:3000/api/auth/login" method="POST">
+            <input type="text" name="username" placeholder="Masukkan Username" required>
+            <input type="password" name="password" placeholder="Masukkan Password" required>
+            <button type="submit">Log In</button>
+        </form>
+        
+        <h2>TAMBAH TUGAS</h2>
+        <form action="http://localhost:3000/api/tasks" method="POST">
+            <input type="text" name="title" placeholder="Judul Tugas" required>
+            <input type="text" name="description" placeholder="Deskripsi Tugas">
+            <button type="submit">Tambahkan</button>
+        </form>
+
+        <h2>TUGAS</h2>
+        <ul>
+            <!--Nanti isi tasks-->
+        </ul>
+    </div>
+</body>
+</html>
