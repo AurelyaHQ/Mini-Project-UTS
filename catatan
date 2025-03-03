@@ -3,7 +3,12 @@ Gunakan Postman untuk menguji endpoint:
 Registrasi: POST /api/auth/register
 
 Login: POST /api/auth/login
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzQwNDIxNDgxLCJleHAiOjE3NDA0MjUwODF9.O95aJNMLToD4SKyWHSpQa-w-YDAf22H4PYof-tiuWZk//
+
+username: Aurel
+password: Hendra
+token: {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQxMDA3ODc3LCJleHAiOjE3NDEwMTE0Nzd9.z_oXJcQy8auebtKufzNWgt7hWi_l2sf3ep5pgHBH8Us"
+}
 
 Buat Task: POST /api/tasks
 

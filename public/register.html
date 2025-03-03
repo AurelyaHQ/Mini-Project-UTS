@@ -3,43 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log In</title>
+    <title>Registrasi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-
         <h1>MANAJEMEN TUGAS</h1>
 
-        <h2>LOG IN</h2>
-        <form id="loginForm" action="http://localhost:3000/api/auth/login" method="POST">
+        <h2>REGISTER</h2>
+        <form id="registerForm" action="http://localhost:3000/api/auth/register" method="POST">
             <input type="text" name="username" placeholder="Masukkan Username" required>
             <input type="password" name="password" placeholder="Masukkan Password" required>
-            <button type="submit">Log In</button>
+            <button type="submit">Register</button>
         </form>
-        <p>Belum ada akun? <a href="register.html"> Daftar di sini </a></p>
+        <p>Sudah ada akun? <a href="index.html">Log In di sini</a></p>
     </div>
-    
+
     <script>
-        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+        document.getElementById("registerForm").addEventListener("submit", async function(event) {
             event.preventDefault();
-            
+    
             const formData = new FormData(this);
             const username = formData.get("username");
             const password = formData.get("password");
     
             try {
-                const response = await fetch("http://localhost:3000/api/auth/login", {
+                const response = await fetch("http://localhost:3000/api/auth/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password })
                 });
     
-                if (!response.ok) throw new Error("Login gagal, periksa kembali username dan password Anda.");
+                if (!response.ok) throw new Error("Registrasi gagal, coba gunakan username lain.");
     
-                const result = await response.json();
-                localStorage.setItem("token", result.token);
-                window.location.href = "tugas.html";
+                alert("Registrasi berhasil! Silakan login.");
+                window.location.href = "index.html";
             } catch (error) {
                 alert(error.message);
             }

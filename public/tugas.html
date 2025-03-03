@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <h1>MANAJEMEN TUGAS</h1>
+
+        <button id="logoutButton">Keluar Akun</button>
+        
+        <h2>TAMBAH TUGAS</h2>
+        <form action="http://localhost:3000/api/tasks" method="POST">
+            <input type="text" name="title" placeholder="Judul Tugas" required>
+            <input type="text" name="description" placeholder="Deskripsi Tugas">
+            <button type="submit">Tambahkan</button>
+        </form>
+
+        <h2>TUGAS</h2>
+        <ul id="taskList">
+            <!--Nanti isi tasks-->
+        </ul>
+    </div>
+   
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Anda harus login terlebih dahulu.");
+                window.location.href = "index.html";
+                return;
+            }
+    
+            async function loadTasks() {
+                try {
+                    const response = await fetch("http://localhost:3000/api/tasks", {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+    
+                    if (!response.ok) throw new Error("Gagal mengambil tugas.");
+    
+                    const tasks = await response.json();
+                    const taskList = document.getElementById("taskList");
+                    taskList.innerHTML = tasks.map(task => `<li>${task.title} - ${task.description}</li>`).join("");
+                } catch (error) {
+                    alert(error.message);
+                }
+            }
+    
+            document.querySelector("form").addEventListener("submit", async function(event) {
+                event.preventDefault();
+    
+                const formData = new FormData(this);
+                const title = formData.get("title");
+                const description = formData.get("description");
+    
+                try {
+                    const response = await fetch("http://localhost:3000/api/tasks", {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ title, description })
+                    });
+    
+                    if (!response.ok) throw new Error("Gagal menambahkan tugas.");
+    
+                    this.reset();
+                    loadTasks();
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+    
+            document.getElementById("logoutButton").addEventListener("click", function() {
+                localStorage.removeItem("token");
+                window.location.href = "index.html";
+            });
+    
+            loadTasks();
+        });
+    </script>
+    
+</body>
+</html>
