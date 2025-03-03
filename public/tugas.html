@@ -8,13 +8,11 @@
 </head>
 <body>
     <div class="container">
-
         <h1>MANAJEMEN TUGAS</h1>
-
         <button id="logoutButton">Keluar Akun</button>
         
         <h2>TAMBAH TUGAS</h2>
-        <form action="http://localhost:3000/api/tasks" method="POST">
+        <form id="taskForm">
             <input type="text" name="title" placeholder="Judul Tugas" required>
             <input type="text" name="description" placeholder="Deskripsi Tugas">
             <button type="submit">Tambahkan</button>
@@ -28,7 +26,7 @@
         document.addEventListener("DOMContentLoaded", async function() {
             const token = localStorage.getItem("token");
             if (!token) {
-                alert("Anda harus login terlebih dahulu.");
+                alert("Anda harus login dulu");
                 window.location.href = "index.html";
                 return;
             }
@@ -43,13 +41,19 @@
     
                     const tasks = await response.json();
                     const taskList = document.getElementById("taskList");
-                    taskList.innerHTML = tasks.map(task => `<li>${task.title} - ${task.description}</li>`).join("");
+                    taskList.innerHTML = tasks.map(task => `
+                        <li>
+                            <span>${task.title} - ${task.description}</span>
+                            <button onclick="editTask(${task.id}, '${task.title}', '${task.description}')">Edit</button>
+                            <button onclick="deleteTask(${task.id})">Hapus</button>
+                        </li>
+                    `).join("");
                 } catch (error) {
                     alert(error.message);
                 }
             }
     
-            document.querySelector("form").addEventListener("submit", async function(event) {
+            document.getElementById("taskForm").addEventListener("submit", async function(event) {
                 event.preventDefault();
     
                 const formData = new FormData(this);
@@ -75,6 +79,36 @@
                 }
             });
     
+            window.editTask = function(id, currentTitle, currentDescription) {
+                const newTitle = prompt("Edit Judul Tugas:", currentTitle);
+                const newDescription = prompt("Edit Deskripsi Tugas:", currentDescription);
+                if (newTitle === null || newDescription === null) return;
+    
+                fetch(`http://localhost:3000/api/tasks/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ title: newTitle, description: newDescription })
+                }).then(response => {
+                    if (!response.ok) throw new Error("Gagal mengedit tugas.");
+                    loadTasks();
+                }).catch(error => alert(error.message));
+            };
+    
+            window.deleteTask = function(id) {
+                if (!confirm("Apakah Anda yakin ingin menghapus tugas ini?")) return;
+    
+                fetch(`http://localhost:3000/api/tasks/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${token}` }
+                }).then(response => {
+                    if (!response.ok) throw new Error("Gagal menghapus tugas.");
+                    loadTasks();
+                }).catch(error => alert(error.message));
+            };
+    
             document.getElementById("logoutButton").addEventListener("click", function() {
                 localStorage.removeItem("token");
                 window.location.href = "index.html";
@@ -83,6 +117,5 @@
             loadTasks();
         });
     </script>
-    
 </body>
 </html>

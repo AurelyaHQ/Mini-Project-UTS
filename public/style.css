@@ -73,3 +73,52 @@ ul li {
 p {
     padding-bottom: 30px;
 }
+
+button.edit {
+    background-color: white;
+    color: #E28413;
+    border: 1px solid #E28413;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+button.delete {
+    background-color: #E28413;
+    color: white;
+    border: 1px solid #E28413;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+button.edit:hover {
+    background-color: #E28413;
+    color: white;
+}
+
+button.delete:hover {
+    background-color: #C67109;
+}
+
+#logoutButton {
+    display: block;
+    margin-left: auto;
+    margin-right: 30px;
+    background-color: #E28413;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#logoutButton:hover {
+    background-color: #C67109;
+}
