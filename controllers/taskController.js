@@ -2,10 +2,10 @@ const Task = require("../models/taskModel");
 
 const taskController = {
   createTask: async (req, res) => {
-    const { title, category } = req.body;
+    const { title, category, deadline, status } = req.body;
     const userId = req.user.id;
     try {
-      const taskId = await Task.create(userId, title, category);
+      const taskId = await Task.create(userId, title, category, deadline, status);
       res.status(201).json({ taskId });
     } catch (err) {
       res.status(500).json({ message: "Task creation failed" });
@@ -22,9 +22,9 @@ const taskController = {
   },
   updateTask: async (req, res) => {
     const { id } = req.params;
-    const { title, category, completed } = req.body;
+    const { title, category, deadline, status, completed } = req.body;
     try {
-      await Task.update(id, title, category, completed);
+      await Task.update(id, title, category, deadline, status, completed);
       res.json({ message: "Task updated" });
     } catch (err) {
       res.status(500).json({ message: "Task update failed" });

@@ -15,11 +15,13 @@
         <form id="taskForm">
             <input type="text" name="title" placeholder="Judul Tugas" required>
             <input type="text" name="category" placeholder="Kategori Tugas">
+            <input type="date" name="deadline" required>
+            <input type="text" name="status" placeholder="Status Tugas">
             <button type="submit">Tambahkan</button>
         </form>
 
         <h2>TUGAS</h2>
-        <ul id="taskList"> <!--List tugasnya muncul disini--> </ul>
+        <ul id="taskList"></ul>
     </div>
    
     <script>
@@ -30,22 +32,21 @@
                 window.location.href = "index.html";
                 return;
             }
-    
-            async function loadTasks() { //Menampilkan daftar tugas dari server
+
+            async function loadTasks() {
                 try {
                     const response = await fetch("http://localhost:3000/api/tasks", {
-                        headers: { "Authorization": `Bearer ${token}` } //Token
+                        headers: { "Authorization": `Bearer ${token}` }
                     });
-    
+
                     if (!response.ok) throw new Error("Gagal mengambil tugas.");
-    
+
                     const tasks = await response.json();
                     const taskList = document.getElementById("taskList");
-                    //Menampilkan tugas dlm bentuk list
                     taskList.innerHTML = tasks.map(task => `
                         <li>
-                            <span>${task.title} - ${task.category}</span>
-                            <button onclick="editTask(${task.id}, '${task.title}', '${task.category}')">Edit</button>
+                            <span>${task.title} - ${task.category} - ${task.deadline} - ${task.status}</span>
+                            <button onclick="editTask(${task.id}, '${task.title}', '${task.category}', '${task.deadline}', '${task.status}')">Edit</button>
                             <button onclick="deleteTask(${task.id})">Hapus</button>
                         </li>
                     `).join("");
@@ -53,15 +54,16 @@
                     alert(error.message);
                 }
             }
-            //Event listener untuk form submit
+
             document.getElementById("taskForm").addEventListener("submit", async function(event) {
                 event.preventDefault();
-    
+                
                 const formData = new FormData(this);
                 const title = formData.get("title");
                 const category = formData.get("category");
+                const deadline = formData.get("deadline");
+                const status = formData.get("status");
 
-                //Ngirimin data tugas baru ke server
                 try {
                     const response = await fetch("http://localhost:3000/api/tasks", {
                         method: "POST",
@@ -69,7 +71,7 @@
                             "Content-Type": "application/json",
                             "Authorization": `Bearer ${token}`
                         },
-                        body: JSON.stringify({ title, category })
+                        body: JSON.stringify({ title, category, deadline, status })
                     });
     
                     if (!response.ok) throw new Error("Gagal menambahkan tugas.");
@@ -81,11 +83,12 @@
                 }
             });
 
-            //Mengedit tugas
-            window.editTask = function(id, currentTitle, currentcategory) {
+            window.editTask = function(id, currentTitle, currentCategory, currentDeadline, currentStatus) {
                 const newTitle = prompt("Edit Judul Tugas:", currentTitle);
-                const newcategory = prompt("Edit Kategori Tugas:", currentcategory);
-                if (newTitle === null || newcategory === null) return;
+                const newCategory = prompt("Edit Kategori Tugas:", currentCategory);
+                const newDeadline = prompt("Edit Deadline (YYYY-MM-DD):", currentDeadline);
+                const newStatus = prompt("Edit Status Tugas:", currentStatus);
+                if (newTitle === null || newCategory === null || newDeadline === null || newStatus === null) return;
     
                 fetch(`http://localhost:3000/api/tasks/${id}`, {
                     method: "PUT",
@@ -93,14 +96,13 @@
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
-                    body: JSON.stringify({ title: newTitle, category: newcategory })
+                    body: JSON.stringify({ title: newTitle, category: newCategory, deadline: newDeadline, status: newStatus })
                 }).then(response => {
                     if (!response.ok) throw new Error("Gagal mengedit tugas.");
                     loadTasks();
                 }).catch(error => alert(error.message));
             };
     
-            //Menghapus tugas
             window.deleteTask = function(id) {
                 if (!confirm("Yakin ingin menghapus tugas ini?")) return;
     
@@ -113,7 +115,6 @@
                 }).catch(error => alert(error.message));
             };
 
-            //Logout
             document.getElementById("logoutButton").addEventListener("click", function() {
                 localStorage.removeItem("token");
                 window.location.href = "index.html";
