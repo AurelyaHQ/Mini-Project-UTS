@@ -21,7 +21,18 @@
         </form>
 
         <h2>TUGAS</h2>
-        <ul id="taskList"></ul>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Judul</th>
+                    <th>Kategori</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="taskTableBody"></tbody>
+        </table>
     </div>
    
     <script>
@@ -42,13 +53,18 @@
                     if (!response.ok) throw new Error("Gagal mengambil tugas.");
 
                     const tasks = await response.json();
-                    const taskList = document.getElementById("taskList");
-                    taskList.innerHTML = tasks.map(task => `
-                        <li>
-                            <span>${task.title} - ${task.category} - ${task.deadline} - ${task.status}</span>
-                            <button onclick="editTask(${task.id}, '${task.title}', '${task.category}', '${task.deadline}', '${task.status}')">Edit</button>
-                            <button onclick="deleteTask(${task.id})">Hapus</button>
-                        </li>
+                    const taskTableBody = document.getElementById("taskTableBody");
+                    taskTableBody.innerHTML = tasks.map(task => `
+                        <tr>
+                            <td>${task.title}</td>
+                            <td>${task.category}</td>
+                            <td>${task.deadline}</td>
+                            <td>${task.status}</td>
+                            <td>
+                                <button onclick="editTask(${task.id}, '${task.title}', '${task.category}', '${task.deadline}', '${task.status}')">Edit</button>
+                                <button onclick="deleteTask(${task.id})">Hapus</button>
+                            </td>
+                        </tr>
                     `).join("");
                 } catch (error) {
                     alert(error.message);

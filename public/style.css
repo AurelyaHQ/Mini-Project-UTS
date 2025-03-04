@@ -122,3 +122,87 @@ button.delete:hover {
 #logoutButton:hover {
     background-color: #C67109;
 }
+
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: #FBF5F3;
+    border-radius: 10px;
+    width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 32px;
+    padding: 40px;
+    color: #28118d;
+    padding-bottom: 20px;
+}
+
+h2 {
+    color: #28118d;
+    font-size: 16px;
+    margin-left: 14px;
+    padding: 10px;
+    text-align: left;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 5px;
+    padding: 20px;
+    border-radius: 10px;
+    padding-bottom: 30px;
+}
+
+input {
+    padding: 5px;
+    border: 0.5px solid #E28413;
+    border-radius: 5px;
+}
+
+button {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    background: #E28413;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #C67109;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+table, th, td {
+    border: 1px solid #E28413;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #E28413;
+    color: white;
+}
+
+td {
+    background-color: white;
+}
