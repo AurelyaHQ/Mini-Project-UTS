@@ -19,7 +19,7 @@
         </form>
 
         <h2>TUGAS</h2>
-        <ul id="taskList"></ul>
+        <ul id="taskList"> <!--List tugasnya muncul disini--> </ul>
     </div>
    
     <script>
@@ -31,16 +31,17 @@
                 return;
             }
     
-            async function loadTasks() {
+            async function loadTasks() { //Menampilkan daftar tugas dari server
                 try {
                     const response = await fetch("http://localhost:3000/api/tasks", {
-                        headers: { "Authorization": `Bearer ${token}` }
+                        headers: { "Authorization": `Bearer ${token}` } //Token
                     });
     
                     if (!response.ok) throw new Error("Gagal mengambil tugas.");
     
                     const tasks = await response.json();
                     const taskList = document.getElementById("taskList");
+                    //Menampilkan tugas dlm bentuk list
                     taskList.innerHTML = tasks.map(task => `
                         <li>
                             <span>${task.title} - ${task.description}</span>
@@ -52,14 +53,15 @@
                     alert(error.message);
                 }
             }
-    
+            //Event listener untuk form submit
             document.getElementById("taskForm").addEventListener("submit", async function(event) {
                 event.preventDefault();
     
                 const formData = new FormData(this);
                 const title = formData.get("title");
                 const description = formData.get("description");
-    
+
+                //Ngirimin data tugas baru ke server
                 try {
                     const response = await fetch("http://localhost:3000/api/tasks", {
                         method: "POST",
@@ -73,12 +75,13 @@
                     if (!response.ok) throw new Error("Gagal menambahkan tugas.");
     
                     this.reset();
-                    loadTasks();
+                    loadTasks(); 
                 } catch (error) {
                     alert(error.message);
                 }
             });
-    
+
+            //Mengedit tugas
             window.editTask = function(id, currentTitle, currentDescription) {
                 const newTitle = prompt("Edit Judul Tugas:", currentTitle);
                 const newDescription = prompt("Edit Deskripsi Tugas:", currentDescription);
@@ -97,8 +100,9 @@
                 }).catch(error => alert(error.message));
             };
     
+            //Menghapus tugas
             window.deleteTask = function(id) {
-                if (!confirm("Apakah Anda yakin ingin menghapus tugas ini?")) return;
+                if (!confirm("Yakin ingin menghapus tugas ini?")) return;
     
                 fetch(`http://localhost:3000/api/tasks/${id}`, {
                     method: "DELETE",
@@ -108,7 +112,8 @@
                     loadTasks();
                 }).catch(error => alert(error.message));
             };
-    
+
+            //Logout
             document.getElementById("logoutButton").addEventListener("click", function() {
                 localStorage.removeItem("token");
                 window.location.href = "index.html";
