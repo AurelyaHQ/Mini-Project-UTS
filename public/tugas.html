@@ -14,7 +14,7 @@
         <h2>TAMBAH TUGAS</h2>
         <form id="taskForm">
             <input type="text" name="title" placeholder="Judul Tugas" required>
-            <input type="text" name="description" placeholder="Deskripsi Tugas">
+            <input type="text" name="category" placeholder="Kategori Tugas">
             <button type="submit">Tambahkan</button>
         </form>
 
@@ -44,8 +44,8 @@
                     //Menampilkan tugas dlm bentuk list
                     taskList.innerHTML = tasks.map(task => `
                         <li>
-                            <span>${task.title} - ${task.description}</span>
-                            <button onclick="editTask(${task.id}, '${task.title}', '${task.description}')">Edit</button>
+                            <span>${task.title} - ${task.category}</span>
+                            <button onclick="editTask(${task.id}, '${task.title}', '${task.category}')">Edit</button>
                             <button onclick="deleteTask(${task.id})">Hapus</button>
                         </li>
                     `).join("");
@@ -59,7 +59,7 @@
     
                 const formData = new FormData(this);
                 const title = formData.get("title");
-                const description = formData.get("description");
+                const category = formData.get("category");
 
                 //Ngirimin data tugas baru ke server
                 try {
@@ -69,7 +69,7 @@
                             "Content-Type": "application/json",
                             "Authorization": `Bearer ${token}`
                         },
-                        body: JSON.stringify({ title, description })
+                        body: JSON.stringify({ title, category })
                     });
     
                     if (!response.ok) throw new Error("Gagal menambahkan tugas.");
@@ -82,10 +82,10 @@
             });
 
             //Mengedit tugas
-            window.editTask = function(id, currentTitle, currentDescription) {
+            window.editTask = function(id, currentTitle, currentcategory) {
                 const newTitle = prompt("Edit Judul Tugas:", currentTitle);
-                const newDescription = prompt("Edit Deskripsi Tugas:", currentDescription);
-                if (newTitle === null || newDescription === null) return;
+                const newcategory = prompt("Edit Kategori Tugas:", currentcategory);
+                if (newTitle === null || newcategory === null) return;
     
                 fetch(`http://localhost:3000/api/tasks/${id}`, {
                     method: "PUT",
@@ -93,7 +93,7 @@
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`
                     },
-                    body: JSON.stringify({ title: newTitle, description: newDescription })
+                    body: JSON.stringify({ title: newTitle, category: newcategory })
                 }).then(response => {
                     if (!response.ok) throw new Error("Gagal mengedit tugas.");
                     loadTasks();
