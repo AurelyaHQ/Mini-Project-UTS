@@ -4,12 +4,6 @@ Registrasi: POST /api/auth/register
 
 Login: POST /api/auth/login
 
-username: Aurel
-password: Hendra
-token: {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzQxMDA3ODc3LCJleHAiOjE3NDEwMTE0Nzd9.z_oXJcQy8auebtKufzNWgt7hWi_l2sf3ep5pgHBH8Us"
-}
-
 Buat Task: POST /api/tasks
 
 Lihat Tasks: GET /api/tasks

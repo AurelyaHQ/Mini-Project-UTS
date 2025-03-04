@@ -23,11 +23,13 @@
     <script>
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
-            
+
+            //Terima username dan password
             const formData = new FormData(this);
             const username = formData.get("username");
             const password = formData.get("password");
-    
+
+            //Kirim username dan password ke backend
             try {
                 const response = await fetch("http://localhost:3000/api/auth/login", {
                     method: "POST",
@@ -35,11 +37,15 @@
                     body: JSON.stringify({ username, password })
                 });
     
+                //Kalau misal tidak ok, lempar pesan ini
                 if (!response.ok) throw new Error("Login gagal, periksa kembali username dan password Anda.");
     
+                //Kalau berhasil, di direct ke page manajemen tugas
                 const result = await response.json();
                 localStorage.setItem("token", result.token);
                 window.location.href = "tugas.html";
+
+                //Kalau error, pesan error dimunculkan melalui alert
             } catch (error) {
                 alert(error.message);
             }

@@ -37,13 +37,17 @@
    
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
+            //Ambil token dari localStorage
             const token = localStorage.getItem("token");
+
+            //Kalau tidak ada token, user disuruh login dulu
             if (!token) {
                 alert("Anda harus login dulu");
                 window.location.href = "index.html";
                 return;
             }
 
+            //Muat daftar tugas dari server
             async function loadTasks() {
                 try {
                     const response = await fetch("http://localhost:3000/api/tasks", {
@@ -54,6 +58,8 @@
 
                     const tasks = await response.json();
                     const taskTableBody = document.getElementById("taskTableBody");
+
+                    //Tabel diisi sesuai dengan data dari server
                     taskTableBody.innerHTML = tasks.map(task => `
                         <tr>
                             <td>${task.title}</td>
@@ -71,6 +77,7 @@
                 }
             }
 
+            //Event listener untuk nambahin tugas baru 
             document.getElementById("taskForm").addEventListener("submit", async function(event) {
                 event.preventDefault();
                 
@@ -92,14 +99,16 @@
     
                     if (!response.ok) throw new Error("Gagal menambahkan tugas.");
     
-                    this.reset();
-                    loadTasks(); 
+                    this.reset(); //Form di reset (di kosongkan)
+                    loadTasks(); //Daftar tugas di muat ulang
                 } catch (error) {
                     alert(error.message);
                 }
             });
 
+            //Edit tugas berdasarkan ID
             window.editTask = function(id, currentTitle, currentCategory, currentDeadline, currentStatus) {
+                //Edit masing" tugas dari prompt
                 const newTitle = prompt("Edit Judul Tugas:", currentTitle);
                 const newCategory = prompt("Edit Kategori Tugas:", currentCategory);
                 const newDeadline = prompt("Edit Deadline (YYYY-MM-DD):", currentDeadline);
@@ -115,11 +124,14 @@
                     body: JSON.stringify({ title: newTitle, category: newCategory, deadline: newDeadline, status: newStatus })
                 }).then(response => {
                     if (!response.ok) throw new Error("Gagal mengedit tugas.");
-                    loadTasks();
+                    loadTasks(); //Memuat ulang tugas setelah diedit
                 }).catch(error => alert(error.message));
             };
-    
+
+
+            //Hapus tugas berdasarkan ID
             window.deleteTask = function(id) {
+                //Muncul konfirmasi
                 if (!confirm("Yakin ingin menghapus tugas ini?")) return;
     
                 fetch(`http://localhost:3000/api/tasks/${id}`, {
@@ -127,10 +139,11 @@
                     headers: { "Authorization": `Bearer ${token}` }
                 }).then(response => {
                     if (!response.ok) throw new Error("Gagal menghapus tugas.");
-                    loadTasks();
+                    loadTasks(); //Memuat ulang serelah delete
                 }).catch(error => alert(error.message));
             };
 
+            //Logout = arahkan kembali ke halaman login
             document.getElementById("logoutButton").addEventListener("click", function() {
                 localStorage.removeItem("token");
                 window.location.href = "index.html";

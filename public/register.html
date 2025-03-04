@@ -23,21 +23,27 @@
         document.getElementById("registerForm").addEventListener("submit", async function(event) {
             event.preventDefault();
     
+            //Habis submit, username dan password diterima
             const formData = new FormData(this);
             const username = formData.get("username");
             const password = formData.get("password");
     
+            //Kirim ke backend
             try {
                 const response = await fetch("http://localhost:3000/api/auth/register", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username, password })
                 });
-    
+
+                //Kalau tidak ok, lempar pesan ini
                 if (!response.ok) throw new Error("Registrasi gagal, coba gunakan username lain.");
     
+                //Kalau berhasil, diarahkan untuk login melalui page login (index)
                 alert("Registrasi berhasil! Silakan login.");
                 window.location.href = "index.html";
+
+                //Kalau error, pesan error dimunculkan melalui alert
             } catch (error) {
                 alert(error.message);
             }
